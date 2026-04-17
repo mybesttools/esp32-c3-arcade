@@ -53,6 +53,14 @@ def parse_frame(line):
     return x, y, buttons
 
 
+def open_serial(port_arg, baud):
+    port = autodetect_port() if port_arg == 'auto' else port_arg
+    ser = serial.Serial(port, baud, timeout=0.2, rtscts=False, dsrdtr=False)
+    # Some USB CDC devices reset on DTR toggles; keep it low and stable.
+    ser.dtr = False
+    return port, ser
+
+
 def main():
     parser = argparse.ArgumentParser(description='Bridge CyberBrick ESP32-C3 USB serial to Linux virtual gamepad')
     parser.add_argument('--port', default='auto', help='Serial port, e.g. /dev/ttyACM0 (default: auto)')
@@ -61,9 +69,6 @@ def main():
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-
-    port = autodetect_port() if args.port == 'auto' else args.port
-    logging.info('Using serial port: %s', port)
 
     caps = {
         e.EV_KEY: BUTTON_CODES,
@@ -74,21 +79,41 @@ def main():
     }
 
     ui = UInput(caps, name=args.name, version=0x0001)
-    ser = serial.Serial(port, args.baud, timeout=0.2)
+    ser = None
 
     signal.signal(signal.SIGINT, on_signal)
     signal.signal(signal.SIGTERM, on_signal)
-
-    # Ignore initial banner lines and settle connection.
-    start = time.time()
-    while time.time() - start < 1.0:
-        ser.readline()
 
     logging.info('Virtual gamepad created and bridge started')
 
     try:
         while not STOP:
-            raw = ser.readline()
+            if ser is None:
+                try:
+                    port, ser = open_serial(args.port, args.baud)
+                    logging.info('Using serial port: %s', port)
+
+                    # Ignore initial banner lines and settle connection.
+                    start = time.time()
+                    while time.time() - start < 1.0:
+                        ser.readline()
+                except Exception as exc:
+                    logging.warning('Serial open failed, retrying in 1s: %s', exc)
+                    time.sleep(1.0)
+                    continue
+
+            try:
+                raw = ser.readline()
+            except serial.SerialException as exc:
+                logging.warning('Serial read failed, reconnecting: %s', exc)
+                try:
+                    ser.close()
+                except Exception:
+                    pass
+                ser = None
+                time.sleep(0.5)
+                continue
+
             if not raw:
                 continue
 
@@ -111,7 +136,8 @@ def main():
 
             ui.syn()
     finally:
-        ser.close()
+        if ser is not None:
+            ser.close()
         ui.close()
 
 
