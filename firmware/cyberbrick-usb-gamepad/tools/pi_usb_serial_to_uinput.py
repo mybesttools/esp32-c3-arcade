@@ -31,9 +31,13 @@ def on_signal(_sig, _frame):
 
 
 def autodetect_port():
+    by_id_candidates = sorted(glob.glob('/dev/serial/by-id/*'))
+    if by_id_candidates:
+        return by_id_candidates[0]
+
     candidates = sorted(glob.glob('/dev/ttyACM*') + glob.glob('/dev/ttyUSB*'))
     if not candidates:
-        raise RuntimeError('No USB serial device found at /dev/ttyACM* or /dev/ttyUSB*')
+        raise RuntimeError('No USB serial device found at /dev/serial/by-id/*, /dev/ttyACM*, or /dev/ttyUSB*')
     return candidates[0]
 
 
