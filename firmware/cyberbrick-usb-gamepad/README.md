@@ -54,6 +54,46 @@ If your board is not detected automatically, upload with an explicit port:
 pio run -t upload --upload-port /dev/tty.usbmodemXXXX
 ```
 
+## Backup prototype firmware first
+
+Before flashing this project onto a prototype board, dump the original firmware:
+
+```bash
+./tools/backup_prototype_firmware.sh /dev/tty.usbmodemXXXX 4MB
+```
+
+If you omit arguments, the script auto-detects a serial port and uses 4MB by default:
+
+```bash
+./tools/backup_prototype_firmware.sh
+```
+
+Backups are stored in the local `backups/` folder as timestamped `.bin` files.
+
+## Flash our firmware
+
+```bash
+./tools/flash_our_firmware.sh /dev/tty.usbmodemXXXX
+```
+
+Or let PlatformIO auto-detect the port:
+
+```bash
+./tools/flash_our_firmware.sh
+```
+
+## Restore original prototype firmware
+
+If you need to restore the board to original state:
+
+```bash
+pio pkg exec -p tool-esptoolpy -- esptool.py \
+  --chip esp32c3 \
+  --port /dev/tty.usbmodemXXXX \
+  --baud 460800 \
+  write_flash 0x0 backups/prototype-YYYYMMDD-HHMMSS.bin
+```
+
 ## Raspberry Pi USB bridge setup
 
 Install dependencies on Pi:
@@ -94,3 +134,42 @@ In EmulationStation:
 2. Map joystick directions and action buttons.
 3. Map Start/Select and Hotkey.
 4. Skip unused controls by holding a button.
+
+## RetroPie full setup
+
+On the Raspberry Pi (RetroPie), clone or copy this project to a local folder, then:
+
+```bash
+cd /home/pi/cyberbrick-usb-gamepad
+sudo apt update
+sudo apt install -y python3-evdev python3-serial joystick
+```
+
+Connect CyberBrick over USB and run bridge manually first:
+
+```bash
+cd /home/pi/cyberbrick-usb-gamepad
+sudo python3 tools/pi_usb_serial_to_uinput.py --port auto
+```
+
+In another terminal, validate Linux sees the virtual gamepad:
+
+```bash
+jstest /dev/input/js0
+```
+
+If detection works, install persistent autostart service:
+
+```bash
+cd /home/pi/cyberbrick-usb-gamepad
+sudo ./tools/install_retropie_bridge_service.sh pi /home/pi/cyberbrick-usb-gamepad auto
+```
+
+Check service health:
+
+```bash
+sudo systemctl status cyberbrick-bridge.service
+sudo journalctl -u cyberbrick-bridge.service -f
+```
+
+If your board always appears at a fixed port and you prefer explicit configuration, replace `auto` with `/dev/ttyACM0` in the installer command.
