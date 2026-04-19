@@ -164,14 +164,12 @@
  include/pinmap.h \
  /Users/mikevandersluis/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src/Wire.h \
  /Users/mikevandersluis/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal.h \
- .pio/libdeps/cyberbrick_esp32c3_ble/Adafruit\ GFX\ Library/Adafruit_GFX.h \
+ .pio/libdeps/cyberbrick_esp32c3_ble/U8g2/src/U8g2lib.h \
  /Users/mikevandersluis/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
- .pio/libdeps/cyberbrick_esp32c3_ble/Adafruit\ GFX\ Library/gfxfont.h \
- .pio/libdeps/cyberbrick_esp32c3_ble/Adafruit\ BusIO/Adafruit_I2CDevice.h \
- .pio/libdeps/cyberbrick_esp32c3_ble/Adafruit\ BusIO/Adafruit_SPIDevice.h \
- /Users/mikevandersluis/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
- /Users/mikevandersluis/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
- .pio/libdeps/cyberbrick_esp32c3_ble/Adafruit\ SSD1306/Adafruit_SSD1306.h \
+ .pio/libdeps/cyberbrick_esp32c3_ble/U8g2/src/U8x8lib.h \
+ .pio/libdeps/cyberbrick_esp32c3_ble/U8g2/src/clib/u8x8.h \
+ .pio/libdeps/cyberbrick_esp32c3_ble/U8g2/src/clib/u8g2.h \
+ .pio/libdeps/cyberbrick_esp32c3_ble/U8g2/src/clib/u8x8.h \
  .pio/libdeps/cyberbrick_esp32c3_ble/ESP32-BLE-Gamepad/BleGamepad.h \
  .pio/libdeps/cyberbrick_esp32c3_ble/NimBLE-Arduino/src/nimconfig.h \
  .pio/libdeps/cyberbrick_esp32c3_ble/NimBLE-Arduino/src/nimconfig_rename.h \
