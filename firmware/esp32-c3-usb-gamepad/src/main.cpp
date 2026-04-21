@@ -4,13 +4,13 @@
 #include <Wire.h>
 #include <esp_rom_sys.h>
 
-#if defined(CYBERBRICK_STATUS_OLED)
+#if defined(ESP32C3_STATUS_OLED)
 #include <Wire.h>
 #include <U8g2lib.h>
 #endif
 
 static constexpr uint32_t USB_SERIAL_FRAME_INTERVAL_MS = 10;
-static constexpr uint8_t CYBERBRICK_LED_PIN = 8;
+static constexpr uint8_t ESP32C3_LED_PIN = 8;
 
 // MCP23017 register map used for simple polled button inputs.
 static constexpr uint8_t MCP_REG_IODIRA = 0x00;
@@ -22,7 +22,7 @@ static constexpr uint8_t MCP_REG_GPIOB = 0x13;
 
 static bool isReservedDisplayPin(uint8_t pin)
 {
-#if defined(CYBERBRICK_STATUS_OLED)
+#if defined(ESP32C3_STATUS_OLED)
   if (STATUS_DISPLAY_ENABLED && (pin == STATUS_OLED_SDA_PIN || pin == STATUS_OLED_SCL_PIN))
   {
     return true;
@@ -37,18 +37,18 @@ void initMcp23017();
 uint16_t readMcp23017Inputs();
 static uint8_t axesToHat(int16_t x, int16_t y);
 
-#if defined(CYBERBRICK_STATUS_OLED)
+#if defined(ESP32C3_STATUS_OLED)
 static U8G2_SSD1306_72X40_ER_F_HW_I2C statusDisplaySsd(
   U8G2_R0,
-  U8X8_PIN_NONE,
-  STATUS_OLED_SCL_PIN,
-  STATUS_OLED_SDA_PIN
+  U8X8_PIN_NONE,  // reset
+  U8X8_PIN_NONE,  // clock  — Wire already initialised in setup()
+  U8X8_PIN_NONE   // data   — Wire already initialised in setup()
 );
 static U8G2_SH1106_72X40_WISE_F_HW_I2C statusDisplaySh1106(
   U8G2_R0,
-  U8X8_PIN_NONE,
-  STATUS_OLED_SCL_PIN,
-  STATUS_OLED_SDA_PIN
+  U8X8_PIN_NONE,  // reset
+  U8X8_PIN_NONE,  // clock  — Wire already initialised in setup()
+  U8X8_PIN_NONE   // data   — Wire already initialised in setup()
 );
 static U8G2_SSD1306_72X40_ER_F_SW_I2C statusDisplaySsdSw(
   U8G2_R0,
@@ -80,6 +80,8 @@ static int16_t statusPrevY = 0;
 static uint32_t statusDiagLastMs = 0;
 static uint32_t statusLedDiagLastMs = 0;
 static uint8_t statusI2cDiagCode = 0;
+static int16_t statusRx = 0;
+static int16_t statusRy = 0;
 
 static bool statusUseSh1106()
 {
@@ -96,9 +98,9 @@ static void blinkLed(uint8_t pulses, uint16_t onMs, uint16_t offMs)
 {
   for (uint8_t i = 0; i < pulses; i++)
   {
-    digitalWrite(CYBERBRICK_LED_PIN, LOW); // Active-low onboard LED.
+    digitalWrite(ESP32C3_LED_PIN, LOW); // Active-low onboard LED.
     delay(onMs);
-    digitalWrite(CYBERBRICK_LED_PIN, HIGH);
+    digitalWrite(ESP32C3_LED_PIN, HIGH);
     delay(offMs);
   }
 }
@@ -306,6 +308,15 @@ static uint8_t countPressedButtons(uint32_t buttons)
   return count;
 }
 
+// Draw a joystick circle (r=8) with a filled dot showing stick position.
+static void drawStick(U8G2 &disp, uint8_t cx, uint8_t cy, int16_t sx, int16_t sy)
+{
+  disp.drawCircle(cx, cy, 8);
+  int8_t dx = (int8_t)((int32_t)sx * 6 / 32767);
+  int8_t dy = (int8_t)((int32_t)sy * 6 / 32767);
+  disp.drawDisc((uint8_t)(cx + dx), (uint8_t)(cy + dy), 2);
+}
+
 static void statusDrawAdvertising()
 {
   if (!statusDisplayReady)
@@ -324,15 +335,16 @@ static void statusDrawAdvertising()
   char line3[24];
   snprintf(line3, sizeof(line3), "WAIT HOST%s", dots);
 
-  statusDisplaySsd.clearBuffer();
-  statusDisplaySsd.setFont(u8g2_font_5x7_tr);
-  statusDisplaySsd.drawFrame(0, 0, STATUS_VISIBLE_WIDTH, STATUS_VISIBLE_HEIGHT);
-  statusDisplaySsd.drawStr(0, 8, "BLE Everywhere");
-  statusDisplaySsd.drawStr(0, 16, "ADVERTISING");
-  statusDisplaySsd.drawStr(0, 24, line3);
-  statusDisplaySsd.drawStr(0, 32, "PAIR NOW");
-  statusDisplaySsd.drawStr(0, 40, "BLE Everywhere");
-  statusDisplaySsd.sendBuffer();
+  U8G2 &disp = statusUseSh1106() ? (U8G2 &)statusDisplaySh1106 : (U8G2 &)statusDisplaySsd;
+  disp.clearBuffer();
+  disp.setFont(u8g2_font_5x7_tr);
+  disp.drawFrame(0, 0, STATUS_VISIBLE_WIDTH, STATUS_VISIBLE_HEIGHT);
+  disp.drawStr(0, 8, "BLE Everywhere");
+  disp.drawStr(0, 16, "ADVERTISING");
+  disp.drawStr(0, 24, line3);
+  disp.drawStr(0, 32, "PAIR NOW");
+  disp.drawStr(0, 40, "BLE Everywhere");
+  disp.sendBuffer();
 }
 
 static void statusDrawConnected(int16_t x, int16_t y, uint8_t hat, uint32_t buttons)
@@ -342,31 +354,35 @@ static void statusDrawConnected(int16_t x, int16_t y, uint8_t hat, uint32_t butt
     return;
   }
 
-  uint32_t uptimeS = (millis() - statusConnectedSinceMs) / 1000;
-  uint32_t mins = uptimeS / 60;
-  uint32_t secs = uptimeS % 60;
-  uint32_t idleMs = millis() - statusLastInputChangeMs;
-  uint8_t pressedCount = countPressedButtons(buttons);
+  U8G2 &disp = statusUseSh1106() ? (U8G2 &)statusDisplaySh1106 : (U8G2 &)statusDisplaySsd;
+  disp.clearBuffer();
 
-  char line1[24];
-  char line2[24];
-  char line4[24];
-  char line5[24];
+  // Left stick — centered at (9, 20), drives hat.
+  drawStick(disp, 9, 20, x, y);
 
-  snprintf(line1, sizeof(line1), "UP %02lu:%02lu", (unsigned long)mins, (unsigned long)secs);
-  snprintf(line2, sizeof(line2), "HAT:%s", hatToText(hat));
-  snprintf(line4, sizeof(line4), "B:%u/%u 0x%03lX", pressedCount, (unsigned)TOTAL_BUTTON_COUNT, (unsigned long)buttons);
-  snprintf(line5, sizeof(line5), "IDLE %lums", (unsigned long)idleMs);
+  // Right stick — centered at (63, 20), drives Rx/Ry axes.
+  // Negate X for display since JOY2_INVERT_X is already applied to statusRx.
+  drawStick(disp, 63, 20, JOY2_INVERT_X ? -statusRx : statusRx, JOY2_INVERT_Y ? -statusRy : statusRy);
 
-  statusDisplaySsd.clearBuffer();
-  statusDisplaySsd.setFont(u8g2_font_5x7_tr);
-  statusDisplaySsd.drawFrame(0, 0, STATUS_VISIBLE_WIDTH, STATUS_VISIBLE_HEIGHT);
-  statusDisplaySsd.drawStr(0, 8, "BLE Everywhere");
-  statusDisplaySsd.drawStr(0, 16, line1);
-  statusDisplaySsd.drawStr(0, 24, line2);
-  statusDisplaySsd.drawStr(0, 32, line4);
-  statusDisplaySsd.drawStr(0, 40, line5);
-  statusDisplaySsd.sendBuffer();
+  // Middle area (x 18..53): show lowest pressed button index, or "---".
+  char btnStr[6];
+  if (buttons != 0)
+  {
+    uint8_t idx = 0;
+    uint32_t tmp = buttons;
+    while ((tmp & 1) == 0) { tmp >>= 1; idx++; }
+    snprintf(btnStr, sizeof(btnStr), "B%u", (unsigned)(idx + 1));
+  }
+  else
+  {
+    snprintf(btnStr, sizeof(btnStr), "---");
+  }
+  disp.setFont(u8g2_font_7x13_tr);
+  uint8_t tw = (uint8_t)disp.getStrWidth(btnStr);
+  uint8_t tx = (uint8_t)(18 + (36 - tw) / 2);
+  disp.drawStr(tx, 27, btnStr);
+
+  disp.sendBuffer();
 }
 
 static void statusInit()
@@ -427,13 +443,26 @@ static void statusInit()
   }
   esp_rom_printf("\n");
 
-  esp_rom_printf("[display] calling SSD1306 begin()...\n");
-  statusDisplaySsd.setI2CAddress((uint8_t)(statusDisplayAddr << 1));
-  statusDisplaySsd.setBusClock(400000);
-  statusDisplaySsd.begin();
-  statusDisplaySsd.setPowerSave(0);
-  statusDisplaySsd.setContrast(255);
-  esp_rom_printf("[display] SSD1306 begin() done\n");
+  if (statusUseSh1106())
+  {
+    esp_rom_printf("[display] calling SH1106 begin()...\n");
+    statusDisplaySh1106.setI2CAddress((uint8_t)(statusDisplayAddr << 1));
+    statusDisplaySh1106.setBusClock(400000);
+    statusDisplaySh1106.begin();
+    statusDisplaySh1106.setPowerSave(0);
+    statusDisplaySh1106.setContrast(255);
+    esp_rom_printf("[display] SH1106 begin() done\n");
+  }
+  else
+  {
+    esp_rom_printf("[display] calling SSD1306 begin()...\n");
+    statusDisplaySsd.setI2CAddress((uint8_t)(statusDisplayAddr << 1));
+    statusDisplaySsd.setBusClock(400000);
+    statusDisplaySsd.begin();
+    statusDisplaySsd.setPowerSave(0);
+    statusDisplaySsd.setContrast(255);
+    esp_rom_printf("[display] SSD1306 begin() done\n");
+  }
 
   // 3 quick blinks = begin() completed without hanging.
   blinkLed(3, 60, 60);
@@ -482,7 +511,7 @@ static void statusUpdate(bool connected, int16_t x, int16_t y, uint8_t hat, uint
 }
 #endif
 
-#if defined(CYBERBRICK_DIAGNOSTIC_INPUTS)
+#if defined(ESP32C3_DIAGNOSTIC_INPUTS)
 static void readControllerState(int16_t &x, int16_t &y, uint32_t &buttons)
 {
   uint32_t phase = (millis() / 20) % 400;
@@ -580,6 +609,17 @@ uint32_t readButtons()
 {
   uint32_t bits = 0;
 
+#if defined(USE_MCP23017_EXPANDER)
+  // All buttons on MCP23017; read entire port word and map by bit position.
+  uint16_t mcpInputs = readMcp23017Inputs();
+  for (size_t i = 0; i < MCP_BUTTON_COUNT; i++)
+  {
+    if ((mcpInputs & (1U << MCP_BUTTON_BITS[i])) == 0U) // active LOW
+    {
+      bits |= (1UL << i);
+    }
+  }
+#else
   for (size_t i = 0; i < BUTTON_COUNT; i++)
   {
     if (isReservedDisplayPin(BUTTON_PINS[i]))
@@ -597,7 +637,7 @@ uint32_t readButtons()
   if (USE_MCP23017)
   {
     uint16_t mcpInputs = readMcp23017Inputs();
-    bool extraLeftPressed = ((mcpInputs & (1U << MCP_EXTRA_LEFT_BIT)) == 0U);
+    bool extraLeftPressed  = ((mcpInputs & (1U << MCP_EXTRA_LEFT_BIT))  == 0U);
     bool extraRightPressed = ((mcpInputs & (1U << MCP_EXTRA_RIGHT_BIT)) == 0U);
 
     if (extraLeftPressed)
@@ -609,6 +649,7 @@ uint32_t readButtons()
       bits |= (1UL << (BUTTON_COUNT + 1));
     }
   }
+#endif
 
   return bits;
 }
@@ -667,12 +708,27 @@ void setup()
   esp_rom_printf("\n\n[boot] === BLE Everywhere boot ===\n");
   Serial.println("\n[boot] === BLE Everywhere boot ===");
 
-  pinMode(CYBERBRICK_LED_PIN, OUTPUT);
-  digitalWrite(CYBERBRICK_LED_PIN, HIGH);
+  pinMode(ESP32C3_LED_PIN, OUTPUT);
+  digitalWrite(ESP32C3_LED_PIN, HIGH);
   blinkLed(1, 80, 80);
 
-#if !defined(CYBERBRICK_DIAGNOSTIC_INPUTS)
+#if !defined(ESP32C3_DIAGNOSTIC_INPUTS)
   analogReadResolution(12);
+
+  // I2C bus recovery: if a previous reset interrupted a transaction the OLED
+  // may hold SDA low, preventing Wire.begin() from working. Clock SCL 9 times
+  // to flush any stuck byte, then send a STOP condition to free the bus.
+  pinMode(STATUS_OLED_SCL_PIN, OUTPUT);
+  pinMode(STATUS_OLED_SDA_PIN, INPUT_PULLUP);
+  for (uint8_t i = 0; i < 9; i++) {
+    digitalWrite(STATUS_OLED_SCL_PIN, HIGH); delayMicroseconds(5);
+    digitalWrite(STATUS_OLED_SCL_PIN, LOW);  delayMicroseconds(5);
+  }
+  // STOP: SDA low→high while SCL high.
+  pinMode(STATUS_OLED_SDA_PIN, OUTPUT);
+  digitalWrite(STATUS_OLED_SDA_PIN, LOW);
+  digitalWrite(STATUS_OLED_SCL_PIN, HIGH); delayMicroseconds(5);
+  digitalWrite(STATUS_OLED_SDA_PIN, HIGH); delayMicroseconds(5);
 
   // Use the OLED I2C pins explicitly. Wire.begin() with no args defaults to
   // GPIO8/9 on ESP32-C3, which conflicts with the onboard LED on GPIO8.
@@ -681,8 +737,8 @@ void setup()
   initMcp23017();
 
   // Reclaim GPIO8 for LED after Wire.begin() in case it was touched.
-  pinMode(CYBERBRICK_LED_PIN, OUTPUT);
-  digitalWrite(CYBERBRICK_LED_PIN, HIGH);
+  pinMode(ESP32C3_LED_PIN, OUTPUT);
+  digitalWrite(ESP32C3_LED_PIN, HIGH);
   blinkLed(2, 60, 60); // checkpoint 2: Wire.begin + MCP done
   esp_rom_printf("[boot] checkpoint 2: Wire + MCP done\n");
 
@@ -699,6 +755,10 @@ void setup()
 
   pinMode(JOY_X_PIN, INPUT);
   pinMode(JOY_Y_PIN, INPUT);
+#if defined(USE_MCP23017_EXPANDER)
+  pinMode(JOY2_X_PIN, INPUT);
+  pinMode(JOY2_Y_PIN, INPUT);
+#endif
 #endif
 
 #if defined(CONTROLLER_MODE_BLE)
@@ -711,7 +771,12 @@ void setup()
   delay(500);
   bleGamepadConfig.setButtonCount(TOTAL_BUTTON_COUNT);
   bleGamepadConfig.setHatSwitchCount(1);
+#if defined(USE_MCP23017_EXPANDER)
+  // Enable Rx/Ry for right analog stick. Left stick is sent as hat switch.
+  bleGamepadConfig.setWhichAxes(false, false, false, false, true, true, false, false);
+#else
   bleGamepadConfig.setWhichAxes(false, false, false, false, false, false, false, false);
+#endif
   bleGamepad.begin(&bleGamepadConfig);
   blinkLed(6, 60, 60); // checkpoint 6: BLE started
   esp_rom_printf("[boot] checkpoint 6: BLE started, entering loop\n");
@@ -723,7 +788,7 @@ void setup()
   Serial.begin(SERIAL_BAUD_RATE);
 #else
   delay(100);
-  Serial.println("CYBERBRICK_SERIAL_GAMEPAD_V1");
+  Serial.println("ESP32C3_SERIAL_GAMEPAD_V1");
 #endif
 }
 
@@ -763,7 +828,13 @@ void loop()
   int16_t y = 0;
   uint32_t buttons = 0;
   readControllerState(x, y, buttons);
-  uint8_t hat = axesToHat(x, JOY_INVERT_Y ? -y : y);
+  uint8_t hat = axesToHat(JOY_INVERT_X ? -x : x, JOY_INVERT_Y ? -y : y);
+#if defined(USE_MCP23017_EXPANDER)
+  int16_t rx = mapAxis(analogRead(JOY2_X_PIN), JOY_MIN, JOY2_CENTER_X, JOY_MAX, JOY_DEADZONE);
+  int16_t ry = mapAxis(analogRead(JOY2_Y_PIN), JOY_MIN, JOY2_CENTER_Y, JOY_MAX, JOY_DEADZONE);
+  if (JOY2_INVERT_X) rx = -rx;
+  if (JOY2_INVERT_Y) ry = -ry;
+#endif
   for (size_t i = 0; i < TOTAL_BUTTON_COUNT; i++)
   {
     uint8_t buttonIndex = (uint8_t)(i + 1);
@@ -780,6 +851,12 @@ void loop()
   }
 
   bleGamepad.setHat1(hat);
+#if defined(USE_MCP23017_EXPANDER)
+  bleGamepad.setRX(rx);
+  bleGamepad.setRY(ry);
+  statusRx = rx;
+  statusRy = ry;
+#endif
   statusUpdate(true, x, y, hat, buttons);
 #elif defined(CONTROLLER_MODE_USB_HID)
   // Wait for host to be ready

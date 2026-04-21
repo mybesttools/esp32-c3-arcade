@@ -1,8 +1,8 @@
-# CyberBrick Controller Firmware
+# ESP32-C3 Controller Firmware
 
 This project targets **ESP32-C3 BLE gamepad mode** by default.
 
-The board advertises as `CyberBrick Arcade` and pairs directly with RetroPie over Bluetooth.
+The board advertises as `ESP32-C3 Arcade` and pairs directly with RetroPie over Bluetooth.
 
 It also includes an optional tiny OLED status display (SSD1306 I2C) showing:
 
@@ -14,8 +14,8 @@ It also includes an optional tiny OLED status display (SSD1306 I2C) showing:
 
 Yes, both are supported from the same codebase:
 
-- BLE gamepad mode on ESP32-C3 (`cyberbrick_esp32c3_ble`)
-- USB serial bridge mode on ESP32-C3 (`cyberbrick_esp32c3_usbserial`)
+- BLE gamepad mode on ESP32-C3 (`esp32c3_esp32c3_ble`)
+- USB serial bridge mode on ESP32-C3 (`esp32c3_esp32c3_usbserial`)
 
 Note: ESP32-C3 does not expose native USB HID gamepad device mode in this project.
 USB mode here is CDC serial output for a Pi-side bridge.
@@ -49,7 +49,7 @@ Buttons (active LOW, wire each button between GPIO pin and GND):
 
 ## Optional tiny OLED display
 
-The BLE environment enables status output (`CYBERBRICK_STATUS_OLED`).
+The BLE environment enables status output (`ESP32C3_STATUS_OLED`).
 
 For ABrobot ESP32-C3 OLED boards, the onboard 0.42" display is a 72x40 pixel
 OLED driven over I2C on GPIO5 (SDA) / GPIO6 (SCL).
@@ -83,19 +83,19 @@ If your display has different dimensions or address, change those constants.
 ### 1. Build and upload to ESP32-C3
 
 ```bash
-cd firmware/cyberbrick-usb-gamepad
-pio run -e cyberbrick_esp32c3_ble
-pio run -e cyberbrick_esp32c3_ble -t upload
+cd firmware/esp32c3-usb-gamepad
+pio run -e esp32c3_esp32c3_ble
+pio run -e esp32c3_esp32c3_ble -t upload
 
 # USB serial bridge firmware
-pio run -e cyberbrick_esp32c3_usbserial
-pio run -e cyberbrick_esp32c3_usbserial -t upload
+pio run -e esp32c3_esp32c3_usbserial
+pio run -e esp32c3_esp32c3_usbserial -t upload
 ```
 
 If needed, upload with explicit port:
 
 ```bash
-pio run -e cyberbrick_esp32c3_ble -t upload --upload-port /dev/tty.usbmodemXXXX
+pio run -e esp32c3_esp32c3_ble -t upload --upload-port /dev/tty.usbmodemXXXX
 ```
 
 Or use the helper script:
@@ -109,7 +109,7 @@ Or use the helper script:
 In RetroPie Bluetooth settings:
 
 1. Register and connect new Bluetooth device
-2. Select `CyberBrick Arcade`
+2. Select `ESP32-C3 Arcade`
 
 ### 3. Configure in EmulationStation
 
@@ -145,7 +145,7 @@ Edit `include/pinmap.h` and adjust:
 
 ## Alternate environments
 
-- `cyberbrick_esp32c3_ble` (default)
-- `cyberbrick_esp32c3_usbserial` (USB CDC serial bridge mode on ESP32-C3)
-- `cyberbrick_rp2040_usbhid` (wired USB HID on Pico)
-- `cyberbrick_d1_dongle` (ESP8266 ESP-NOW dongle utility)
+- `esp32c3_esp32c3_ble` (default)
+- `esp32c3_esp32c3_usbserial` (USB CDC serial bridge mode on ESP32-C3)
+- `esp32c3_rp2040_usbhid` (wired USB HID on Pico)
+- `esp32c3_d1_dongle` (ESP8266 ESP-NOW dongle utility)
