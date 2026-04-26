@@ -10,9 +10,9 @@ set -euo pipefail
 PORT="${1:-}"
 
 if [[ -n "${PORT}" ]]; then
-  pio run -e cyberbrick_esp32c3_ble -t upload --upload-port "${PORT}"
+  pio run -e esp32c3_ble -t upload --upload-port "${PORT}"
 else
-  pio run -e cyberbrick_esp32c3_ble -t upload
+  pio run -e esp32c3_ble -t upload
 fi
 
 echo "Flash complete."

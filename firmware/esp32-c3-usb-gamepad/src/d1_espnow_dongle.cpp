@@ -1,7 +1,7 @@
 /**
  * ESP8266 D1 – ESP-NOW gamepad dongle
  *
- * Receives 3-byte gamepad frames from the CyberBrick C3 over ESP-NOW and
+ * Receives 3-byte gamepad frames from the ESP32-C3 over ESP-NOW and
  * forwards them over USB serial to the Raspberry Pi bridge script.
  *
  * Frame format (sent by mpy/boot.py):
@@ -13,10 +13,10 @@
  *   GP,<hat>,<buttons_decimal>\n
  *
  * Build with:
- *   pio run -e cyberbrick_d1_dongle -t upload
+ *   pio run -e d1_dongle -t upload
  *
  * First boot: open serial monitor to find the D1's MAC address, then
- * update DONGLE_MAC in mpy/boot.py on the CyberBrick.
+ * update DONGLE_MAC in mpy/boot.py on the ESP32-C3.
  */
 
 #include <Arduino.h>

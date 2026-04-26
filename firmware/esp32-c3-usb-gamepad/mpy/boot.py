@@ -1,5 +1,5 @@
 """
-CyberBrick ESP-NOW Gamepad Transmitter – boot.py
+ESP32-C3 ESP-NOW Gamepad Transmitter – boot.py
 
 Reads controller state via rc_module and broadcasts it over ESP-NOW
 to the ESP8266 D1 dongle plugged into the Raspberry Pi.

@@ -71,7 +71,7 @@ def make_uinput():
             (e.ABS_HAT0Y, AbsInfo(value=0, min=-1, max=1, fuzz=0, flat=0, resolution=0)),
         ],
     }
-    return UInput(cap, name="CyberBrick Arcade", version=0x1)
+    return UInput(cap, name="ESP32-C3 Arcade", version=0x1)
 
 
 def find_port():
@@ -93,7 +93,7 @@ def main():
     print(f"Opening {port} at {args.baud} baud")
 
     ui = make_uinput()
-    print("Virtual gamepad created: CyberBrick Arcade")
+    print("Virtual gamepad created: ESP32-C3 Arcade")
 
     prev_hat = (0, 0)
     prev_buttons = 0
