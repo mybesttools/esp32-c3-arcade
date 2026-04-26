@@ -27,25 +27,92 @@ USB mode here is CDC serial output for a Pi-side bridge.
 - `platformio.ini`: PlatformIO build config
 - `tools/flash_our_firmware.sh`: upload helper for default ESP32-C3 BLE env
 
-## Wiring
+## Pinouts
 
-Joystick:
+### Config B — single joystick, direct GPIO buttons (default)
 
-- `JOY_X_PIN` = `A0`
-- `JOY_Y_PIN` = `A1`
+Environments: `esp32c3_esp32c3_ble`, `esp32c3_esp32c3_usbserial`
 
-Buttons (active LOW, wire each button between GPIO pin and GND):
+**Joystick** (analog, connect to 3.3 V, GND, and wiper):
 
-- A = `2`
-- B = `3`
-- X = `4`
-- Y = `5`
-- L = `6`
-- R = `7`
-- START = `9`
-- SELECT = `10`
-- HOTKEY = `20`
-- COIN = `21`
+| Signal  | GPIO  | Arduino pin |
+|---------|-------|-------------|
+| JOY X   | GPIO0 | A0          |
+| JOY Y   | GPIO1 | A1          |
+
+**Buttons** (active LOW — wire between GPIO pin and GND, internal pull-up enabled):
+
+| Button | GPIO |
+|--------|------|
+| A      | 2    |
+| B      | 3    |
+| X      | 4    |
+| Y      | 5    |
+| L      | 6    |
+| R      | 7    |
+| START  | 9    |
+| SELECT | 10   |
+| HOTKEY | 20   |
+| COIN   | 21   |
+
+**OLED status display** (I2C, shared with Config A):
+
+| Signal | GPIO |
+|--------|------|
+| SDA    | 5    |
+| SCL    | 6    |
+
+> Note: GPIO5/6 are shared between the OLED and button Y/L in Config B.
+> If the display is connected, remove buttons Y and L from the `BUTTON_PINS[]`
+> array in `include/pinmap.h`, or remap them to unused GPIOs.
+
+---
+
+### Config A — dual joystick, MCP23017 expander board
+
+Environments: `esp32c3_ble_mcp`
+
+All buttons are wired to the MCP23017 I/O expander (no direct GPIO buttons).
+The MCP23017 connects over I2C with A0/A1/A2 address pins all tied to GND
+(address `0x20`).
+
+**Joysticks** (analog, connect to 3.3 V, GND, and wiper):
+
+| Signal       | GPIO  | Arduino pin | Role                  |
+|--------------|-------|-------------|-----------------------|
+| Left JOY X   | GPIO0 | A0          | Hat switch            |
+| Left JOY Y   | GPIO1 | A1          | Hat switch            |
+| Right JOY X  | GPIO2 | A2          | BLE Rx axis           |
+| Right JOY Y  | GPIO3 | A3          | BLE Ry axis           |
+
+**I2C bus** (MCP23017 + OLED share the same bus):
+
+| Signal | GPIO | Connected to         |
+|--------|------|----------------------|
+| SDA    | 5    | MCP23017 SDA, OLED SDA |
+| SCL    | 6    | MCP23017 SCL, OLED SCL |
+
+**MCP23017 button mapping** (active LOW — wire each button between the
+MCP pin and GND; internal pull-ups are enabled by firmware):
+
+| Button    | MCP port | MCP bit | Board label |
+|-----------|----------|---------|-------------|
+| A (✕)     | GPA      | 0       | A0          |
+| B (○)     | GPA      | 1       | A1          |
+| X (□)     | GPA      | 2       | A2          |
+| Y (△)     | GPA      | 3       | A3          |
+| L shoulder| GPA      | 4       | A4          |
+| R shoulder| GPA      | 5       | A5          |
+| Start     | GPA      | 6       | A6          |
+| Select    | GPA      | 7       | A7          |
+| Hotkey    | GPB      | 0       | B0          |
+| Coin      | GPB      | 1       | B1          |
+| *(spare)* | GPB      | 2       | B2          |
+| *(spare)* | GPB      | 3       | B3          |
+| D-pad Up  | GPB      | 4       | B4          |
+| D-pad Down| GPB      | 5       | B5          |
+| D-pad Left| GPB      | 6       | B6          |
+| D-pad Right| GPB     | 7       | B7          |
 
 ## Optional tiny OLED display
 
@@ -143,9 +210,11 @@ Edit `include/pinmap.h` and adjust:
 - `JOY_MIN`, `JOY_MAX`
 - `BUTTON_PINS[]` order if you want a different button layout
 
-## Alternate environments
+## Environments
 
-- `esp32c3_esp32c3_ble` (default)
-- `esp32c3_esp32c3_usbserial` (USB CDC serial bridge mode on ESP32-C3)
-- `esp32c3_rp2040_usbhid` (wired USB HID on Pico)
-- `esp32c3_d1_dongle` (ESP8266 ESP-NOW dongle utility)
+| Environment | Config | Description |
+|---|---|---|
+| `esp32c3_esp32c3_ble` | B | BLE gamepad, single joystick, direct GPIO buttons (default) |
+| `esp32c3_ble_mcp` | A | BLE gamepad, dual joystick, MCP23017 expander buttons |
+| `esp32c3_esp32c3_usbserial` | B | USB CDC serial bridge for Pi-side uinput script, single joystick |
+| `esp32c3_rp2040_usbhid` | — | Wired USB HID gamepad on Raspberry Pi Pico |

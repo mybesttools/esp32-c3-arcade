@@ -49,18 +49,22 @@ static const size_t  BUTTON_COUNT  = 0;
 // Board right-side labels: rows B0/A0 … B7/A7.  Use the Ax pin for Port A, Bx for Port B.
 // Button index in the array = button number sent in the BLE report.
 static const uint8_t MCP_BUTTON_BITS[] = {
-  0,   // A       board pin A0  (Port A bit 0)
-  1,   // B       board pin A1  (Port A bit 1)
-  2,   // X       board pin A2  (Port A bit 2)
-  3,   // Y       board pin A3  (Port A bit 3)
-  4,   // L       board pin A4  (Port A bit 4)
-  5,   // R       board pin A5  (Port A bit 5)
-  6,   // START   board pin A6  (Port A bit 6)
-  7,   // SELECT  board pin A7  (Port A bit 7)
-  8,   // HOTKEY  board pin B0  (Port B bit 0)
-  9,   // COIN    board pin B1  (Port B bit 1)
-  10,  // L3      board pin B2  (Port B bit 2, left stick click)
-  11,  // R3      board pin B3  (Port B bit 3, right stick click)
+  0,   // A         board pin A0  (Port A bit 0)
+  1,   // B         board pin A1  (Port A bit 1)
+  2,   // X         board pin A2  (Port A bit 2)
+  3,   // Y         board pin A3  (Port A bit 3)
+  4,   // L         board pin A4  (Port A bit 4)
+  5,   // R         board pin A5  (Port A bit 5)
+  6,   // START     board pin A6  (Port A bit 6)
+  7,   // SELECT    board pin A7  (Port A bit 7)
+  8,   // HOTKEY    board pin B0  (Port B bit 0)
+  9,   // COIN      board pin B1  (Port B bit 1)
+  10,  // spare     board pin B2  (Port B bit 2, formerly L3)
+  11,  // spare     board pin B3  (Port B bit 3, formerly R3)
+  12,  // D-UP      board pin B4  (Port B bit 4)
+  13,  // D-DOWN    board pin B5  (Port B bit 5)
+  14,  // D-LEFT    board pin B6  (Port B bit 6)
+  15,  // D-RIGHT   board pin B7  (Port B bit 7)
 };
 static const size_t MCP_BUTTON_COUNT  = sizeof(MCP_BUTTON_BITS) / sizeof(MCP_BUTTON_BITS[0]);
 static const size_t TOTAL_BUTTON_COUNT = MCP_BUTTON_COUNT;

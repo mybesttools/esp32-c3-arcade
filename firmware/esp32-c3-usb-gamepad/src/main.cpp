@@ -37,6 +37,17 @@ void initMcp23017();
 uint16_t readMcp23017Inputs();
 static uint8_t axesToHat(int16_t x, int16_t y);
 
+static void blinkLed(uint8_t pulses, uint16_t onMs, uint16_t offMs)
+{
+  for (uint8_t i = 0; i < pulses; i++)
+  {
+    digitalWrite(ESP32C3_LED_PIN, LOW); // Active-low onboard LED.
+    delay(onMs);
+    digitalWrite(ESP32C3_LED_PIN, HIGH);
+    delay(offMs);
+  }
+}
+
 #if defined(ESP32C3_STATUS_OLED)
 static U8G2_SSD1306_72X40_ER_F_HW_I2C statusDisplaySsd(
   U8G2_R0,
@@ -92,17 +103,6 @@ static bool i2cDevicePresent(uint8_t addr)
 {
   Wire.beginTransmission(addr);
   return (Wire.endTransmission() == 0);
-}
-
-static void blinkLed(uint8_t pulses, uint16_t onMs, uint16_t offMs)
-{
-  for (uint8_t i = 0; i < pulses; i++)
-  {
-    digitalWrite(ESP32C3_LED_PIN, LOW); // Active-low onboard LED.
-    delay(onMs);
-    digitalWrite(ESP32C3_LED_PIN, HIGH);
-    delay(offMs);
-  }
 }
 
 static void blinkDiagCode()
@@ -360,9 +360,11 @@ static void statusDrawConnected(int16_t x, int16_t y, uint8_t hat, uint32_t butt
   // Left stick — centered at (9, 20), drives hat.
   drawStick(disp, 9, 20, x, y);
 
+#if defined(USE_MCP23017_EXPANDER)
   // Right stick — centered at (63, 20), drives Rx/Ry axes.
   // Negate X for display since JOY2_INVERT_X is already applied to statusRx.
   drawStick(disp, 63, 20, JOY2_INVERT_X ? -statusRx : statusRx, JOY2_INVERT_Y ? -statusRy : statusRy);
+#endif
 
   // Middle area (x 18..53): show lowest pressed button index, or "---".
   char btnStr[6];
@@ -756,8 +758,10 @@ void setup()
   pinMode(JOY_X_PIN, INPUT);
   pinMode(JOY_Y_PIN, INPUT);
 #if defined(USE_MCP23017_EXPANDER)
+#if defined(USE_MCP23017_EXPANDER)
   pinMode(JOY2_X_PIN, INPUT);
   pinMode(JOY2_Y_PIN, INPUT);
+#endif
 #endif
 #endif
 
@@ -787,6 +791,10 @@ void setup()
   // For debug printing
   Serial.begin(SERIAL_BAUD_RATE);
 #else
+#if defined(ESP32C3_STATUS_OLED)
+  statusInit();
+  statusUpdate(false, 0, 0, 0, 0);
+#endif
   delay(100);
   Serial.println("ESP32C3_SERIAL_GAMEPAD_V1");
 #endif
@@ -884,8 +892,15 @@ void loop()
 #else
   static uint32_t lastSerialFrameMs = 0;
   uint32_t now = millis();
+  bool serialHostReady = Serial.isConnected();
   if ((now - lastSerialFrameMs) < USB_SERIAL_FRAME_INTERVAL_MS)
   {
+#if defined(ESP32C3_STATUS_OLED)
+    statusUpdate(serialHostReady, statusPrevX, statusPrevY,
+                 axesToHat(JOY_INVERT_X ? -statusPrevX : statusPrevX,
+                           JOY_INVERT_Y ? -statusPrevY : statusPrevY),
+                 statusPrevButtons);
+#endif
     delay(1);
     return;
   }
@@ -895,6 +910,11 @@ void loop()
   int16_t y = 0;
   uint32_t buttons = 0;
   readControllerState(x, y, buttons);
+  uint8_t hat = axesToHat(JOY_INVERT_X ? -x : x, JOY_INVERT_Y ? -y : y);
+
+#if defined(ESP32C3_STATUS_OLED)
+  statusUpdate(serialHostReady, x, y, hat, buttons);
+#endif
 
   // CSV frame for Pi bridge: R,<x>,<y>,<buttons_hex>
   Serial.print("R,");
