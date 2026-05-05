@@ -1,0 +1,238 @@
+(kicad_sch (version 20231120) (generator "tom-breakout-gen")
+
+  (paper "A4")
+
+  (title_block
+    (title "CyberBrick Controller Breakout")
+    (rev "1.2")
+    (company "DIY")
+    (comment 1 "ABrobot ESP32-C3 OLED socketed directly on board")
+    (comment 2 "All control inputs: SH1.0. MCP23017 output: 2.54mm header.")
+    (comment 3 "GPIO2=strapping pin: joystick wiper OK, do NOT pull LOW at boot")
+  )
+
+  ;; ──────────────────────────────────────────────────────────────
+  ;; U1 — ESP32-C3 OLED MODULE SOCKET  (2× 1×8 female, 2.54mm)
+  ;; Top row pins T1–T8, Bottom row pins B1–B8
+  ;; ──────────────────────────────────────────────────────────────
+
+  ;; Top row socket
+  (symbol (lib_id "Connector_Generic:Conn_01x08") (at 100 20 0) (unit 1)
+    (reference "U1A") (value "ESP32-C3 top row")
+    (footprint "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical")
+    (pin "1" (net "NC"))          ;; T1 GPIO8 / onboard LED
+    (pin "2" (net "NC"))          ;; T2 GPIO9
+    (pin "3" (net "NC"))          ;; T3 GPIO8 (alt)
+    (pin "4" (net "NC"))          ;; T4 GPIO7
+    (pin "5" (net "I2C_SCL"))     ;; T5 GPIO6 = SCL
+    (pin "6" (net "I2C_SDA"))     ;; T6 GPIO5 = SDA
+    (pin "7" (net "NC"))          ;; T7 GPIO4
+    (pin "8" (net "ADC_RY"))      ;; T8 GPIO3 = Right Y
+  )
+
+  ;; Bottom row socket
+  (symbol (lib_id "Connector_Generic:Conn_01x08") (at 100 40 0) (unit 1)
+    (reference "U1B") (value "ESP32-C3 bottom row")
+    (footprint "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical")
+    (pin "1" (net "NC"))          ;; B1 V5 (USB 5V)
+    (pin "2" (net "GND"))         ;; B2 GND
+    (pin "3" (net "VCC"))         ;; B3 3V3 out → board VCC rail
+    (pin "4" (net "NC"))          ;; B4 GPIO20 / UART RX
+    (pin "5" (net "NC"))          ;; B5 GPIO21 / UART TX
+    (pin "6" (net "ADC_RX"))      ;; B6 GPIO2 ⚠️ strapping — joystick OK
+    (pin "7" (net "ADC_LY"))      ;; B7 GPIO1 = Left Y
+    (pin "8" (net "ADC_LX"))      ;; B8 GPIO0 = Left X
+  )
+
+  ;; ──────────────────────────────────────────────────────────────
+  ;; J8 — POWER IN  (2-pin 2.54 mm)
+  ;; Optional: feed 3.3V when ESP32-C3 not USB-powered
+  ;; ──────────────────────────────────────────────────────────────
+  (symbol (lib_id "Connector_Generic:Conn_01x02") (at 100 60 0) (unit 1)
+    (reference "J8") (value "PWR_IN 3V3+GND (optional)")
+    (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical")
+    (pin "1" (net "VCC"))
+    (pin "2" (net "GND"))
+  )
+
+  ;; ──────────────────────────────────────────────────────────────
+  ;; J1–J4 — JOYSTICK AXIS INPUTS  (SH1.0 3-pin, SM03B-SRSS-TB)
+  ;; pin1=VCC, pin2=SIG (→ ADC net), pin3=GND
+  ;; ──────────────────────────────────────────────────────────────
+  (symbol (lib_id "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal") (at 20 20 0) (unit 1)
+    (reference "J1") (value "J_LX Left X")
+    (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "VCC"))
+    (pin "2" (net "ADC_LX"))
+    (pin "3" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal") (at 20 30 0) (unit 1)
+    (reference "J2") (value "J_LY Left Y")
+    (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "VCC"))
+    (pin "2" (net "ADC_LY"))
+    (pin "3" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal") (at 20 40 0) (unit 1)
+    (reference "J3") (value "J_RX Right X (GPIO2)")
+    (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "VCC"))
+    (pin "2" (net "ADC_RX"))
+    (pin "3" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal") (at 20 50 0) (unit 1)
+    (reference "J4") (value "J_RY Right Y")
+    (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "VCC"))
+    (pin "2" (net "ADC_RY"))
+    (pin "3" (net "GND"))
+  )
+
+  ;; ──────────────────────────────────────────────────────────────
+  ;; C1–C4 — 100 nF decoupling on each SH1.0 VCC line
+  ;; ──────────────────────────────────────────────────────────────
+  (symbol (lib_id "Device:C") (at 50 20 0) (unit 1)
+    (reference "C1") (value "100nF") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (pin "1" (net "VCC")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Device:C") (at 50 30 0) (unit 1)
+    (reference "C2") (value "100nF") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (pin "1" (net "VCC")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Device:C") (at 50 40 0) (unit 1)
+    (reference "C3") (value "100nF") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (pin "1" (net "VCC")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Device:C") (at 50 50 0) (unit 1)
+    (reference "C4") (value "100nF") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    (pin "1" (net "VCC")) (pin "2" (net "GND"))
+  )
+
+  ;; ──────────────────────────────────────────────────────────────
+  ;; J9–J24 — BUTTON INPUTS  (SH1.0 2-pin, SM02B-SRSS-TB)
+  ;; pin1=BTN signal → MCP23017 GPIO, pin2=GND
+  ;; Left d-pad + right d-pad: J9–J16 (left column)
+  ;; Shoulders + function buttons: J17–J24 (right column)
+  ;; ──────────────────────────────────────────────────────────────
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 75 0) (unit 1)
+    (reference "J9")  (value "BTN_DL_UP GPA0")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DL_UP")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 82 0) (unit 1)
+    (reference "J10") (value "BTN_DL_LEFT GPA1")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DL_LEFT")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 89 0) (unit 1)
+    (reference "J11") (value "BTN_DL_RIGHT GPA2")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DL_RIGHT")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 96 0) (unit 1)
+    (reference "J12") (value "BTN_DL_DOWN GPA3")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DL_DOWN")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 103 0) (unit 1)
+    (reference "J13") (value "BTN_DR_UP GPA4")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DR_UP")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 110 0) (unit 1)
+    (reference "J14") (value "BTN_DR_LEFT GPA5")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DR_LEFT")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 117 0) (unit 1)
+    (reference "J15") (value "BTN_DR_RIGHT GPA6")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DR_RIGHT")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 20 124 0) (unit 1)
+    (reference "J16") (value "BTN_DR_DOWN GPA7")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_DR_DOWN")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 75 0) (unit 1)
+    (reference "J17") (value "BTN_SHL1 GPB0")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_SHL1")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 82 0) (unit 1)
+    (reference "J18") (value "BTN_SHL2 GPB1")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_SHL2")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 89 0) (unit 1)
+    (reference "J19") (value "BTN_SHR1 GPB2")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_SHR1")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 96 0) (unit 1)
+    (reference "J20") (value "BTN_SHR2 GPB3")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_SHR2")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 103 0) (unit 1)
+    (reference "J21") (value "BTN_START GPB4")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_START")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 110 0) (unit 1)
+    (reference "J22") (value "BTN_SELECT GPB5")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_SELECT")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 117 0) (unit 1)
+    (reference "J23") (value "BTN_HOTKEY GPB6")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_HOTKEY")) (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal") (at 70 124 0) (unit 1)
+    (reference "J24") (value "BTN_COIN GPB7")
+    (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal")
+    (pin "1" (net "BTN_COIN")) (pin "2" (net "GND"))
+  )
+
+  ;; ──────────────────────────────────────────────────────────────
+  ;; J6 — MCP23017 BUTTON HEADER  (2.54 mm, 2×9)
+  ;; ──────────────────────────────────────────────────────────────
+  (symbol (lib_id "Connector_Generic:Conn_02x09_Odd_Even") (at 160 90 0) (unit 1)
+    (reference "J6") (value "MCP_BTNS → MCP23017")
+    (footprint "Connector_PinHeader_2.54mm:PinHeader_2x09_P2.54mm_Vertical")
+    (pin "1"  (net "BTN_DL_UP"))
+    (pin "2"  (net "BTN_DR_UP"))
+    (pin "3"  (net "BTN_DL_LEFT"))
+    (pin "4"  (net "BTN_DR_LEFT"))
+    (pin "5"  (net "BTN_DL_RIGHT"))
+    (pin "6"  (net "BTN_DR_RIGHT"))
+    (pin "7"  (net "BTN_DL_DOWN"))
+    (pin "8"  (net "BTN_DR_DOWN"))
+    (pin "9"  (net "BTN_SHL1"))
+    (pin "10" (net "BTN_SHR1"))
+    (pin "11" (net "BTN_SHL2"))
+    (pin "12" (net "BTN_SHR2"))
+    (pin "13" (net "BTN_START"))
+    (pin "14" (net "BTN_SELECT"))
+    (pin "15" (net "BTN_HOTKEY"))
+    (pin "16" (net "BTN_COIN"))
+    (pin "17" (net "GND"))
+    (pin "18" (net "GND"))
+  )
+
+  ;; ──────────────────────────────────────────────────────────────
+  ;; J7 — I2C BUS HEADER  (2.54 mm, 1×4)
+  ;; Connects MCP23017 (and any external OLED) to the I2C bus
+  ;; Onboard OLED on ESP32-C3 module uses same GPIO5/6 internally
+  ;; ──────────────────────────────────────────────────────────────
+  (symbol (lib_id "Connector_Generic:Conn_01x04") (at 160 135 0) (unit 1)
+    (reference "J7") (value "I2C → MCP23017")
+    (footprint "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+    (pin "1" (net "I2C_SDA"))
+    (pin "2" (net "I2C_SCL"))
+    (pin "3" (net "VCC"))
+    (pin "4" (net "GND"))
+  )
+
+)
