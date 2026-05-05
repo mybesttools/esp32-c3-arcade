@@ -110,8 +110,10 @@ def header():
 # ── board outline ─────────────────────────────────────────────────────────────
 def edge_cuts():
     emit(f'  (gr_rect (start 0 0) (end {BOARD_W} {BOARD_H})')
-    emit(f'    (stroke (width 0.05) (type solid)) (layer "Edge.Cuts")'
-         f'    (uuid "{uid()}"))')
+    emit(f'    (stroke (width 0.05) (type solid))')
+    emit(f'    (fill none)')
+    emit(f'    (layer "Edge.Cuts")')
+    emit(f'    (uuid "{uid()}"))')
 
 # ── mounting holes ────────────────────────────────────────────────────────────
 def mounting_holes():
@@ -283,14 +285,22 @@ def output_headers():
 def fills_and_silk():
     emit(f'  (zone (net {net("GND")}) (net_name "GND") (layer "B.Cu")')
     emit(f'    (uuid "{uid()}")')
-    emit(f'    (hatch edge 0.508)')
+    emit(f'    (hatch full 0.508)')
     emit(f'    (connect_pads (clearance 0.2))')
     emit(f'    (min_thickness 0.25)')
-    emit(f'    (fill yes (mode solid) (thermal_gap 0.3) (thermal_bridge_width 0.3))')
-    emit(f'    (polygon (pts')
-    emit(f'      (xy 0.5 0.5) (xy {BOARD_W-0.5} 0.5)')
-    emit(f'      (xy {BOARD_W-0.5} {BOARD_H-0.5}) (xy 0.5 {BOARD_H-0.5})')
-    emit(f'    ))')
+    emit(f'    (filled_areas_thickness no)')
+    emit(f'    (fill yes')
+    emit(f'      (thermal_gap 0.3)')
+    emit(f'      (thermal_bridge_width 0.3)')
+    emit(f'    )')
+    emit(f'    (polygon')
+    emit(f'      (pts')
+    emit(f'        (xy 0.5 0.5)')
+    emit(f'        (xy {BOARD_W-0.5} 0.5)')
+    emit(f'        (xy {BOARD_W-0.5} {BOARD_H-0.5})')
+    emit(f'        (xy 0.5 {BOARD_H-0.5})')
+    emit(f'      )')
+    emit(f'    )')
     emit('  )')
 
     # Board label
