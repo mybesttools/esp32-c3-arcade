@@ -57,9 +57,9 @@
     (stroke (width 0.05) (type solid))
     (fill none)
     (layer "Edge.Cuts")
-    (uuid "70912335-694b-4a67-b8f9-78b9f770e9be"))
+    (uuid "076e3261-7514-4d09-9e77-4701c7226dfd"))
   (footprint "MountingHole:MountingHole_3.2mm_M3"
-    (layer "F.Cu") (at 3.5 3.5) (uuid "ce6a2657-3df8-453b-a07d-ec6068a67215")
+    (layer "F.Cu") (at 3.5 3.5) (uuid "b7ba63a6-5740-4601-92ee-fec97be7bb3f")
     (fp_text reference "H1" (at 0 -4) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "M3" (at 0 4) (layer "F.Fab") hide
@@ -68,7 +68,7 @@
       (drill 3.2) (layers "*.Cu" "*.Mask"))
   )
   (footprint "MountingHole:MountingHole_3.2mm_M3"
-    (layer "F.Cu") (at 81.5 3.5) (uuid "18c027a6-44d5-4c21-a90f-8e259115f3b2")
+    (layer "F.Cu") (at 81.5 3.5) (uuid "d5edf29d-80b0-49b2-8c2a-3e8b00fe860d")
     (fp_text reference "H2" (at 0 -4) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "M3" (at 0 4) (layer "F.Fab") hide
@@ -77,7 +77,7 @@
       (drill 3.2) (layers "*.Cu" "*.Mask"))
   )
   (footprint "MountingHole:MountingHole_3.2mm_M3"
-    (layer "F.Cu") (at 3.5 66.5) (uuid "4658d62a-6892-4153-9165-aa33254ea31a")
+    (layer "F.Cu") (at 3.5 66.5) (uuid "b05c72b6-a554-4740-8ba7-4677251a62f3")
     (fp_text reference "H3" (at 0 -4) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "M3" (at 0 4) (layer "F.Fab") hide
@@ -86,7 +86,7 @@
       (drill 3.2) (layers "*.Cu" "*.Mask"))
   )
   (footprint "MountingHole:MountingHole_3.2mm_M3"
-    (layer "F.Cu") (at 81.5 66.5) (uuid "f498aae7-62a0-4d94-90b3-8b2020312af2")
+    (layer "F.Cu") (at 81.5 66.5) (uuid "be09710d-e360-453b-909b-c4c2249985b3")
     (fp_text reference "H4" (at 0 -4) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "M3" (at 0 4) (layer "F.Fab") hide
@@ -95,7 +95,7 @@
       (drill 3.2) (layers "*.Cu" "*.Mask"))
   )
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical"
-    (layer "F.Cu") (at 12.0 20.38) (angle 90) (uuid "342a2a08-4814-4264-a9bb-e75dde623dad")
+    (layer "F.Cu") (at 12.0 20.38 90) (uuid "b34cb531-06b9-4a96-a1fd-cfd4f86ded85")
     (fp_text reference "U1A" (at 9 -3) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "ESP32-C3 top" (at 9 3) (layer "F.Fab") hide
@@ -118,7 +118,7 @@
       (drill 0.8) (layers "*.Cu" "*.Mask") (net 6 "ADC_RY"))
   )
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical"
-    (layer "F.Cu") (at 12.0 35.62) (angle 90) (uuid "cf1cf5aa-81b2-4b86-9541-298a16006640")
+    (layer "F.Cu") (at 12.0 35.62 90) (uuid "93fc3688-3830-4cd8-b153-a63a97e2055e")
     (fp_text reference "U1B" (at 9 -3) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "ESP32-C3 bot" (at 9 3) (layer "F.Fab") hide
@@ -141,7 +141,7 @@
       (drill 0.8) (layers "*.Cu" "*.Mask") (net 3 "ADC_LX"))
   )
   (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 10.0 4.0) (uuid "618987a8-d93e-4779-87aa-0813e66ef519")
+    (layer "F.Cu") (at 10.0 4.0) (uuid "0210b6af-102a-4db0-bf76-fd0246c7d060")
     (fp_text reference "J1" (at 0 -3.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "LX" (at 0 3.5) (layer "F.Fab") hide
@@ -156,7 +156,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Capacitor_SMD:C_0402_1005Metric"
-    (layer "F.Cu") (at 10.0 9.5) (uuid "06b94e44-535a-432d-b29e-82361aea6aa6")
+    (layer "F.Cu") (at 10.0 9.5) (uuid "f126aba8-6fb4-499b-8804-50a1e83a207a")
     (fp_text reference "C1" (at 0 -1.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "100nF" (at 0 1.5) (layer "F.Fab") hide
@@ -167,7 +167,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
   (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 23.0 4.0) (uuid "993f0f45-b575-4d38-9fff-6fd9bc5749c0")
+    (layer "F.Cu") (at 23.0 4.0) (uuid "33182274-de75-4a69-a652-5a72476d6898")
     (fp_text reference "J2" (at 0 -3.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "LY" (at 0 3.5) (layer "F.Fab") hide
@@ -182,7 +182,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Capacitor_SMD:C_0402_1005Metric"
-    (layer "F.Cu") (at 23.0 9.5) (uuid "a9d04c11-ba59-4b82-bb67-e1f47e79ebd4")
+    (layer "F.Cu") (at 23.0 9.5) (uuid "94494d08-cd82-4f81-be8a-e0c12f24abae")
     (fp_text reference "C2" (at 0 -1.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "100nF" (at 0 1.5) (layer "F.Fab") hide
@@ -193,7 +193,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
   (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 36.0 4.0) (uuid "37d0621b-6254-47c0-bb21-3c1da834190e")
+    (layer "F.Cu") (at 36.0 4.0) (uuid "7afb5b0f-9076-472a-ace0-d6811939be22")
     (fp_text reference "J3" (at 0 -3.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "RX" (at 0 3.5) (layer "F.Fab") hide
@@ -208,7 +208,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Capacitor_SMD:C_0402_1005Metric"
-    (layer "F.Cu") (at 36.0 9.5) (uuid "289951b1-ffa2-42b1-9641-f6f2dfab5e3b")
+    (layer "F.Cu") (at 36.0 9.5) (uuid "35a97e5a-4ec7-43d2-b72a-eab832e3a1c2")
     (fp_text reference "C3" (at 0 -1.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "100nF" (at 0 1.5) (layer "F.Fab") hide
@@ -219,7 +219,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
   (footprint "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 49.0 4.0) (uuid "426df8f7-28b4-44e8-8532-c81b576f759d")
+    (layer "F.Cu") (at 49.0 4.0) (uuid "2112134f-3b40-4dab-b2af-7600768d1c63")
     (fp_text reference "J4" (at 0 -3.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "RY" (at 0 3.5) (layer "F.Fab") hide
@@ -234,7 +234,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Capacitor_SMD:C_0402_1005Metric"
-    (layer "F.Cu") (at 49.0 9.5) (uuid "9581864e-1591-4f36-8628-0949b73a642f")
+    (layer "F.Cu") (at 49.0 9.5) (uuid "ccc98b55-06a9-407a-be44-90418bccf3e3")
     (fp_text reference "C4" (at 0 -1.5) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "100nF" (at 0 1.5) (layer "F.Fab") hide
@@ -245,7 +245,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 5.0 62.0) (uuid "c6c3be3c-4ae6-4de2-ba62-e113c0c8caf2")
+    (layer "F.Cu") (at 5.0 62.0) (uuid "5fff89d2-a017-4eff-863f-1713a0182576")
     (fp_text reference "J9" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DL_UP" (at 0 3.0) (layer "F.Fab") hide
@@ -258,7 +258,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 9.8 62.0) (uuid "3104c690-9c1f-41c4-8425-0627057452c6")
+    (layer "F.Cu") (at 9.8 62.0) (uuid "40579966-82e2-400a-8519-1ad1037d4ac8")
     (fp_text reference "J10" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DL_LEFT" (at 0 3.0) (layer "F.Fab") hide
@@ -271,7 +271,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 14.6 62.0) (uuid "621f3822-5c1c-4c1a-ac2b-b2d710f6cde8")
+    (layer "F.Cu") (at 14.6 62.0) (uuid "500e16f8-7af3-40b8-b225-e8091c475af6")
     (fp_text reference "J11" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DL_RIGHT" (at 0 3.0) (layer "F.Fab") hide
@@ -284,7 +284,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 19.4 62.0) (uuid "bff95d56-acb0-4a21-b806-a8cdd38b6a32")
+    (layer "F.Cu") (at 19.4 62.0) (uuid "57e5877b-43ab-44ae-91d1-c90ba91bb7a7")
     (fp_text reference "J12" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DL_DOWN" (at 0 3.0) (layer "F.Fab") hide
@@ -297,7 +297,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 24.2 62.0) (uuid "c3c6f014-a41e-4f83-9058-96391100b55d")
+    (layer "F.Cu") (at 24.2 62.0) (uuid "0d4996f2-1e23-45f0-b97b-b5b77ce2b7e5")
     (fp_text reference "J13" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DR_UP" (at 0 3.0) (layer "F.Fab") hide
@@ -310,7 +310,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 29.0 62.0) (uuid "f78a1fbb-a12b-4c9e-9eb5-6a3dc5708b1f")
+    (layer "F.Cu") (at 29.0 62.0) (uuid "e53f822d-e020-4315-b3f0-cd1ec94ca541")
     (fp_text reference "J14" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DR_LEFT" (at 0 3.0) (layer "F.Fab") hide
@@ -323,7 +323,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 33.8 62.0) (uuid "87fc0873-6363-4dab-958f-6212d7cc4955")
+    (layer "F.Cu") (at 33.8 62.0) (uuid "a6628847-ae76-42f9-aa76-1e0b421d4211")
     (fp_text reference "J15" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DR_RIGHT" (at 0 3.0) (layer "F.Fab") hide
@@ -336,7 +336,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 38.6 62.0) (uuid "b37a13a6-da45-4d9b-94eb-dde926753d5a")
+    (layer "F.Cu") (at 38.6 62.0) (uuid "c4b4f039-45e5-4573-a951-80c3b2370a56")
     (fp_text reference "J16" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "DR_DOWN" (at 0 3.0) (layer "F.Fab") hide
@@ -349,7 +349,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 5.0 66.5) (uuid "934f8579-f3d0-4366-898b-57b1e35cd3b6")
+    (layer "F.Cu") (at 5.0 66.5) (uuid "12b9ef1e-2efe-4d5c-8dd1-3154c0d19411")
     (fp_text reference "J17" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "SHL1" (at 0 3.0) (layer "F.Fab") hide
@@ -362,7 +362,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 9.8 66.5) (uuid "71a2f3b5-ff1a-4d26-b1a2-474e8e192951")
+    (layer "F.Cu") (at 9.8 66.5) (uuid "43ce52cb-6a39-41dd-9370-79e4feb3e7ec")
     (fp_text reference "J18" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "SHL2" (at 0 3.0) (layer "F.Fab") hide
@@ -375,7 +375,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 14.6 66.5) (uuid "29be8250-462c-48f8-9412-5830e4f432ae")
+    (layer "F.Cu") (at 14.6 66.5) (uuid "5e67a8c6-c4b7-4114-9c19-2de772ef340f")
     (fp_text reference "J19" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "SHR1" (at 0 3.0) (layer "F.Fab") hide
@@ -388,7 +388,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 19.4 66.5) (uuid "2317793d-21c6-4ebf-ae7e-42b326e96abe")
+    (layer "F.Cu") (at 19.4 66.5) (uuid "769b9167-3b9d-47a3-9cee-e49f778e6ee7")
     (fp_text reference "J20" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "SHR2" (at 0 3.0) (layer "F.Fab") hide
@@ -401,7 +401,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 24.2 66.5) (uuid "b81b5d34-9c18-4656-acd7-e1253deb1748")
+    (layer "F.Cu") (at 24.2 66.5) (uuid "68a784d7-f27c-4673-af97-c1db4110f4fc")
     (fp_text reference "J21" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "START" (at 0 3.0) (layer "F.Fab") hide
@@ -414,7 +414,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 29.0 66.5) (uuid "a9e87bbc-673a-4c8c-a9a2-d89362ee6184")
+    (layer "F.Cu") (at 29.0 66.5) (uuid "fbdbd25a-bbd4-49d1-9add-bec73db4817f")
     (fp_text reference "J22" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "SELECT" (at 0 3.0) (layer "F.Fab") hide
@@ -427,7 +427,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 33.8 66.5) (uuid "22683c54-fe56-4f42-bb44-7feeaa2cbb84")
+    (layer "F.Cu") (at 33.8 66.5) (uuid "d05b92b5-a15b-4b67-8f6d-ab08560a2e07")
     (fp_text reference "J23" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "HOTKEY" (at 0 3.0) (layer "F.Fab") hide
@@ -440,7 +440,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_JST:JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal"
-    (layer "F.Cu") (at 38.6 66.5) (uuid "6b1e61c9-c781-47e9-8997-30b456d1311c")
+    (layer "F.Cu") (at 38.6 66.5) (uuid "b5068209-7c00-482b-904e-3cb1df63d2a1")
     (fp_text reference "J24" (at 0 -3.0) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "COIN" (at 0 3.0) (layer "F.Fab") hide
@@ -453,7 +453,7 @@
       (layers "F.Cu" "F.Paste" "F.Mask"))
   )
   (footprint "Connector_PinHeader_2.54mm:PinHeader_2x09_P2.54mm_Vertical"
-    (layer "F.Cu") (at 76.5 12.0) (uuid "b9bbcd63-d395-45df-a449-e5d8d70ad2d1")
+    (layer "F.Cu") (at 76.5 12.0) (uuid "29d15426-bf4a-48fe-8f11-945c5a17756c")
     (fp_text reference "J6" (at 0 -3) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "MCP_BTNS" (at 1.27 23.86) (layer "F.Fab") hide
@@ -496,7 +496,7 @@
       (drill 0.8) (layers "*.Cu" "*.Mask") (net 1 "GND"))
   )
   (footprint "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
-    (layer "F.Cu") (at 76.5 42.0) (uuid "3bf8b956-645b-42a4-9d76-d8abc5f165c4")
+    (layer "F.Cu") (at 76.5 42.0) (uuid "cc2a1098-c943-4a15-8cfe-221992d4779c")
     (fp_text reference "J7" (at 0 -3) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "I2C" (at 0 11.16) (layer "F.Fab") hide
@@ -511,7 +511,7 @@
       (drill 0.8) (layers "*.Cu" "*.Mask") (net 1 "GND"))
   )
   (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
-    (layer "F.Cu") (at 76.5 56.0) (uuid "6bee71ee-2ddb-4031-9446-86232c14127a")
+    (layer "F.Cu") (at 76.5 56.0) (uuid "4eeb2043-5b55-4343-8a36-c523c95eeb5d")
     (fp_text reference "J8" (at 0 -3) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15))))
     (fp_text value "PWR_IN" (at 0 6.08) (layer "F.Fab") hide
@@ -522,7 +522,7 @@
       (drill 0.8) (layers "*.Cu" "*.Mask") (net 1 "GND"))
   )
   (zone (net 1) (net_name "GND") (layer "B.Cu")
-    (uuid "9cb4a896-8c21-4f62-b127-076b1f5d166c")
+    (uuid "29c867da-7057-4527-bb2b-5ec7e5a5c446")
     (hatch full 0.508)
     (connect_pads (clearance 0.2))
     (min_thickness 0.25)
@@ -541,12 +541,12 @@
     )
   )
   (gr_text "CyberBrick Breakout v1.2" (at 42.5 40.0) (layer "F.SilkS")
-    (uuid "f58be680-3c24-411f-91ee-e79ccb96499e")
+    (uuid "d058b7a3-3fa8-426c-8e56-ad2cfd7c956f")
     (effects (font (size 1.2 1.2) (thickness 0.15))))
   (gr_text "GPIO2=BOOT STRAP: no pulldown on J3!" (at 42 50) (layer "F.SilkS")
-    (uuid "541d1a21-1af7-48a2-a998-4481927127cc")
+    (uuid "5f8c0d02-cf9e-4e3b-a9e6-cddbfa9f5688")
     (effects (font (size 0.6 0.6) (thickness 0.1))))
   (gr_text "Verify U1 row spacing before ordering!" (at 35 35) (layer "F.SilkS")
-    (uuid "f4a40de5-f022-4c14-9d03-37d46b55783f")
+    (uuid "3c4a78e2-3fb4-4f57-b174-095b7a69fa35")
     (effects (font (size 0.6 0.6) (thickness 0.1))))
 )

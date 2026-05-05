@@ -192,7 +192,7 @@ def header_2xN(ref, label, x0, y0, n_pairs, net_list, pitch=2.54):
 def socket_1x8(ref, label, x0, y0, net_list):
     """8-pin socket, pins laid out horizontally left→right. x0,y0 = pin 1 position."""
     emit(f'  (footprint "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical"')
-    emit(f'    (layer "F.Cu") (at {x0} {y0}) (angle 90) (uuid "{uid()}")')
+    emit(f'    (layer "F.Cu") (at {x0} {y0} 90) (uuid "{uid()}")')
     fp_ref(ref, 9, -3)
     fp_val(label, 9, 3)
     for i, net_name in enumerate(net_list):
