@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "digikey-kicad-library-master")(type "KiCad")(uri "/Users/mikevandersluis/Documents/digikey-kicad-library-master")(options "")(descr ""))
+)
